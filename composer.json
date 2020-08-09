@@ -1,4 +1,13 @@
 {
+    "name": "nightwolf93/php-brisk",
+    "description": "php-brisk is a php library for interact with the Brisk API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [{
+        "name": "Nightwolf93",
+        "email": "nico.style931@gmail.com"
+    }],
+    "minimum-stability": "stable",
     "autoload": {
         "classmap": [
             "lib/"
