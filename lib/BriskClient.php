@@ -92,4 +92,35 @@ class BriskClient {
         }
         return true;
     }
+
+    /**
+    * Update a link
+    *
+    * @param [string] $slug
+    * @param [string] $url
+    * @param [int] $ttl
+    * @return boolean
+    */
+
+    public function updateLink( $slug, $url, $ttl = -1 ) {
+        $ch = curl_init( $this->baseUrl . '/api/v1/link' );
+        $data = json_encode( [
+            'slug' => $slug,
+            'ttl' => $ttl,
+            'url' => $url
+        ] );
+        $this->addDefaultHeaders( $ch );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PATCH' );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+
+        $response = curl_exec( $ch );
+        if ( !$response ) {
+            return false;
+        }
+        if ( $response == 'Bad Request' || $response == 'Unauthorized' ) {
+            return false;
+        }
+        return true;
+    }
 }

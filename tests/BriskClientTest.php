@@ -22,4 +22,11 @@ final class BriskClientTest extends TestCase {
         $success = self::$client->deleteLink( $link->slug );
         $this->assertTrue( $success );
     }
+
+    public function testCanUpdateLink() {
+        $link = self::$client->createLink( 'https://github.com/nightwolf93/brisk', 30000, 5 );
+        $this->assertNotNull( $link );
+        $success = self::$client->updateLink( $link->slug, 'https://github.com/nightwolf93/brisk', 60000 );
+        $this->assertTrue( $success );
+    }
 }
