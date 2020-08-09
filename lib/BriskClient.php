@@ -59,7 +59,7 @@ class BriskClient {
         if ( !$response ) {
             return NULL;
         }
-        if ( $response == 'Bad Request' || $response == 'Unauthorized' ) {
+        if ( $response == 'Bad Request' || $response == 'Unauthorized' || $response == 'Conflict' ) {
             return false;
         }
         return json_decode( $response );
@@ -119,6 +119,60 @@ class BriskClient {
             return false;
         }
         if ( $response == 'Bad Request' || $response == 'Unauthorized' ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    * Create a new credential pair
+    *
+    * @param [string] $clientId
+    * @param [string] $clientSecret
+    * @return boolean
+    */
+
+    public function createCredential( $clientId, $clientSecret ) {
+        $ch = curl_init( $this->baseUrl . '/api/v1/credential' );
+        $data = json_encode( [
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret
+        ] );
+        $this->addDefaultHeaders( $ch );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PUT' );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+
+        $response = curl_exec( $ch );
+        if ( $response == 'Bad Request' || $response == 'Unauthorized' || $response == 'Conflict' ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+    * Registe a new webhhok
+    *
+    * @param [string] $url
+    * @param [string[]] $bindings
+    * @return void
+    */
+
+    public function registerWebhook( $url, $bindings ) {
+        $ch = curl_init( $this->baseUrl . '/api/v1/webhook' );
+        $data = json_encode( [
+            'url' => $url,
+            'bindings' => $bindings
+        ] );
+        $this->addDefaultHeaders( $ch );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PUT' );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
+
+        $response = curl_exec( $ch );
+
+        if ( $response == 'Bad Request' || $response == 'Unauthorized' || $response == 'Conflict' ) {
             return false;
         }
         return true;
